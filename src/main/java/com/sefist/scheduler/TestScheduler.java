@@ -37,7 +37,7 @@ public class TestScheduler implements SchedulingConfigurer {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String url = String.format("http://%s/api/fusendmt", env.getProperty("api.ip"));
-		String secretid = "69d11b1a9fb6940c31333e2e66985b2a";
+		String secretid = env.getProperty("api.hash");
 		String test = String.valueOf(ran.nextBoolean());
 		String rptFcltyCd = getRandomAlphabet();
 		String docKndCd = doc_knd_cd[ran.nextInt(3)];
