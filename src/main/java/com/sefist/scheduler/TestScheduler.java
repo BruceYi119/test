@@ -51,8 +51,7 @@ public class TestScheduler implements SchedulingConfigurer {
 			String ip = env.getProperty(ips[ipIdx]);
 			String url = String.format("http://%s/api/fusendmt", ip);
 			String secretid = env.getProperty("api.hash");
-//			String test = String.valueOf(ran.nextBoolean());
-			String test = "false";
+			String test = String.valueOf(ran.nextBoolean());
 			String rptFcltyCd = "FC0615";
 			String docKndCd = "REP001";
 			String rptDocNo = sdf.format(new Date());
