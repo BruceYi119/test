@@ -36,7 +36,7 @@ public class TestScheduler implements SchedulingConfigurer {
 		this.env = env;
 	}
 
-	@Scheduled(cron = "*/3 * * * * *")
+	@Scheduled(cron = "*/4 * * * * *")
 	public void randomAddMt() {
 		int endCnt = Integer.parseInt(env.getProperty("api.proc.endcnt"));
 
@@ -47,7 +47,8 @@ public class TestScheduler implements SchedulingConfigurer {
 			StringBuilder sb = new StringBuilder();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			String path = env.getProperty("api.file.dir");
-			int ipIdx = ran.nextInt(2);
+//			int ipIdx = ran.nextInt(2);
+			int ipIdx = 0;
 			String ip = env.getProperty(ips[ipIdx]);
 			String url = String.format("http://%s/api/fusendmt", ip);
 			String secretid = env.getProperty("api.hash");
