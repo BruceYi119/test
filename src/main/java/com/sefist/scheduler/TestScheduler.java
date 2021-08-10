@@ -1,9 +1,9 @@
 package com.sefist.scheduler;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,13 +30,13 @@ public class TestScheduler implements SchedulingConfigurer {
 	private Environment env;
 	private String[] rptMsgTypeCds = { "01", "02", "03", "04", "05", "96", "97", "98", "99" };
 	private String[] ips = { "api.ip1", "api.ip2" };
-	private String[] fileSize = { "3072", "11264", "179200", "12582912" };
+	private String[] fileSize = { "77", "11264", "179200", "12582912" };
 
 	public TestScheduler(Environment env) {
 		this.env = env;
 	}
 
-	@Scheduled(cron = "*/4 * * * * *")
+	@Scheduled(cron = "*/3 * * * * *")
 	public void randomAddMt() {
 		int endCnt = Integer.parseInt(env.getProperty("api.proc.endcnt"));
 
@@ -53,8 +53,8 @@ public class TestScheduler implements SchedulingConfigurer {
 			String url = String.format("http://%s/api/fusendmt", ip);
 			String secretid = env.getProperty("api.hash");
 			String test = String.valueOf(ran.nextBoolean());
-			String rptFcltyCd = "FC0615";
-			String docKndCd = "REP001";
+			String rptFcltyCd = "DH0001";
+			String docKndCd = env.getProperty("api.docKndCd");
 			String rptDocNo = sdf.format(new Date());
 			String rptStatusCd = "SR";
 			String rptProcType = "00";
@@ -91,7 +91,7 @@ public class TestScheduler implements SchedulingConfigurer {
 				httpRequest(sb.toString());
 
 				log.info(String.format("cnt : %d", procCnt));
-				
+
 				procCnt += 1;
 			}
 		}
@@ -121,27 +121,24 @@ public class TestScheduler implements SchedulingConfigurer {
 	}
 
 	public File makeFile(String rptDocNo, String path, String size) {
-		String txt = String.format("%-" + size + "s", "A").replace(" ", "A");
+		String txt = String
+				.format("%-" + size + "s", "CTRSTART||06||01||AA0001||2005-00000001||20060103140000||00||접수성공||CTREND")
+				.replace(" ", "A");
 		String fileName = String.format("%s/CTR_FC0615%s.SND", path, rptDocNo);
 
 		File file = null;
-		FileWriter fw = null;
 
 		try {
+			FileOutputStream fos = new FileOutputStream(fileName);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+
+			bos.write(txt.getBytes("EUC-KR"));
+			bos.close();
+			fos.close();
+
 			file = new File(fileName);
-			fw = new FileWriter(file, true);
-			fw.write(txt);
-			fw.flush();
-			fw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (fw != null)
-					fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 
 		return file;
