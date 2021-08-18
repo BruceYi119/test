@@ -30,7 +30,7 @@ public class TestScheduler implements SchedulingConfigurer {
 	private Environment env;
 	private String[] rptMsgTypeCds = { "01", "02", "03", "04", "05", "96", "97", "98", "99" };
 	private String[] ips = { "api.ip1", "api.ip2" };
-	private String[] fileSize = { "77", "11264", "179200", "12582912" };
+	private String[] fileSize = { "77", "11264", "179200", "12582912", "52428800" };
 
 	public TestScheduler(Environment env) {
 		this.env = env;
@@ -67,6 +67,8 @@ public class TestScheduler implements SchedulingConfigurer {
 				f = makeFile(rptDocNo, path, fileSize[2]);
 			else if (fileMod.equals("3"))
 				f = makeFile(rptDocNo, path, fileSize[3]);
+			else if (fileMod.equals("4"))
+				f = makeFile(rptDocNo, path, fileSize[4]);
 			else
 				f = makeFile(rptDocNo, path, fileSize[ran.nextInt(4)]);
 			log.info(f.toString());
